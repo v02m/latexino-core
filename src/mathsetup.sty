@@ -3,6 +3,7 @@
 % ===========================
 \NeedsTeXFormat{LaTeX2e}
 %\ProvidesPackage{mathsetup}[2025/10/23 Math Setup Package]
+%\PassOptionsToPackage{quiet}{unicode-math}
 
 % Базовые математические пакеты
 % Загрузка необходимых пакетов
@@ -15,9 +16,8 @@
 \RequirePackage{xfrac}       % Красивые текстовые дроби (\sfrac)
 
 % Поддержка OpenType-шрифтов для математики (должен быть ПОСЛЕДНИМ)
-\RequirePackage{unicode-math}
-%\setmathfont{Latin Modern Math}
-\setmathfont{latinmodern-math.otf}
+%\RequirePackage{unicode-math}
+%\setmathfont{latinmodern-math.otf}
 
 % Часто используемые команды
 \newcommand{\R}{\mathbb{R}}                             % Множество действительных чисел
