@@ -1,42 +1,104 @@
 % ===========================
-% 🔢 ГОСТ-ОФОРМЛЕНИЕ СПИСКОВ
+% 🔢 ГОСТ-ОФОРМЛЕНИЕ СПИСКОВ (С ПРОФИЛЯМИ)
 % ===========================
-% Совместимо с memoir + polyglossia + XeLaTeX
+% Поддержка профилей: gost, numeric, mixed, alpha
+% Требует: polyglossia (для \asbuk), enumitem
 
 \NeedsTeXFormat{LaTeX2e}
-%\ProvidesPackage{enumsetup}[2025/10/24 GOST-compliant lists]
+\ProvidesPackage{enumsetup}[2025/10/24 GOST-compliant lists with profiles]
 
-% Загружаем enumitem с опцией совместимости
 \RequirePackage[shortlabels]{enumitem}
 
-% Поддержка русской нумерации (требует polyglossia)
+% ======================================================================
+% 🇷🇺 Поддержка русской нумерации (asbuk)
+% ======================================================================
+% \asbuk — аналог \alph, но для кириллицы: а, б, в, ..., щ
+% Требует, чтобы polyglossia уже определил \russian@alph
 \makeatletter
 \providecommand{\asbuk}[1]{\expandafter\russian@alph\csname c@#1\endcsname}
 \AddEnumerateCounter{\asbuk}{\russian@alph}{щ}
 \makeatother
 
-% Настройка маркированных списков через enumitem (надёжнее \renewcommand)
-\setlist[itemize,1]{label=\normalfont\rmfamily\textemdash}
-\setlist[itemize,2]{label=\normalfont\rmfamily--}
-\setlist[itemize,3]{label=\normalfont\rmfamily*}
-\setlist[itemize,4]{label=\normalfont\rmfamily\textperiodcentered}
+% ======================================================================
+% 🎛️ Инициализация флагов профилей (если не определены в xememoir.sty)
+% ======================================================================
+\@ifundefined{ifliststyle@gost}{\newif\ifliststyle@gost}{}%
+\@ifundefined{ifliststyle@numeric}{\newif\ifliststyle@numeric}{}%
+\@ifundefined{ifliststyle@mixed}{\newif\ifliststyle@mixed}{}%
+\@ifundefined{ifliststyle@alpha}{\newif\ifliststyle@alpha}{}%
 
-% Настройка нумерованных списков по ГОСТ
+% По умолчанию — gost
+\ifliststyle@gost
+\else\ifliststyle@numeric
+\else\ifliststyle@mixed
+\else\ifliststyle@alpha
+\else
+\liststyle@gosttrue
+\fi\fi\fi\fi
+
+% ======================================================================
+% 📋 ПРОФИЛЬ: GOST — стандарт ГОСТ 2.105-95
+% ======================================================================
+% 1-й уровень: а), б), в)
+% 2-й уровень: 1), 2), 3)
+% 3-й уровень: 1), 2), 3)
+\ifliststyle@gost
 \setlist[enumerate,1]{label=\asbuk*.), ref=\asbuk*}
 \setlist[enumerate,2]{label=\arabic*.), ref=\arabic*}
 \setlist[enumerate,3]{label=\arabic*.), ref=\arabic*}
+\fi
 
-% Глобальные параметры: компактность + выравнивание
+% ======================================================================
+% 📋 ПРОФИЛЬ: NUMERIC — все уровни цифровые
+% ======================================================================
+% 1) → 1.1) → 1.1.1)
+\ifliststyle@numeric
+\setlist[enumerate,1]{label=\arabic*.), ref=\arabic*}
+\setlist[enumerate,2]{label=\arabic{enumi}.\arabic*.), ref=\arabic{enumi}.\arabic*}
+\setlist[enumerate,3]{label=\arabic{enumi}.\arabic{enumii}.\arabic*.), ref=\arabic{enumi}.\arabic{enumii}.\arabic*}
+\fi
+
+% ======================================================================
+% 📋 ПРОФИЛЬ: MIXED — цифры → буквы → латиница
+% ======================================================================
+% 1) → а) → A)
+\ifliststyle@mixed
+\setlist[enumerate,1]{label=\arabic*.), ref=\arabic*}
+\setlist[enumerate,2]{label=\asbuk*.), ref=\asbuk*}
+\setlist[enumerate,3]{label=\Alph*.), ref=\Alph*}
+\fi
+
+% ======================================================================
+% 📋 ПРОФИЛЬ: ALPHA — латиница → цифры → буквы
+% ======================================================================
+% a) → 1) → а)
+\ifliststyle@alpha
+\setlist[enumerate,1]{label=\alph*.), ref=\alph*}
+\setlist[enumerate,2]{label=\arabic*.), ref=\arabic*}
+\setlist[enumerate,3]{label=\asbuk*.), ref=\asbuk*}
+\fi
+
+% ======================================================================
+% 🔘 Маркированные списки — одинаковые для всех профилей (ГОСТ)
+% ======================================================================
+\setlist[itemize,1]{label=\normalfont\rmfamily\textemdash} % —
+\setlist[itemize,2]{label=\normalfont\rmfamily--}          % --
+\setlist[itemize,3]{label=\normalfont\rmfamily*}           % *
+\setlist[itemize,4]{label=\normalfont\rmfamily\textperiodcentered}
+
+% ======================================================================
+% 📏 Глобальные параметры: компактность + выравнивание
+% ======================================================================
 \setlist{
-nosep,
-labelindent=\parindent,
-leftmargin=*,
-align=left
+nosep,              % Без вертикальных отступов между пунктами
+labelindent=\parindent, % Отступ маркера = абзацному отступу
+leftmargin=*,       % Автоматическое выравнивание по ширине метки
+align=left          % Метка выравнивается по левому краю
 }
 
-% 📌 Примечание:
-% - ГОСТ 2.105-95 допускает: а) б) в) ... или 1) 2) 3) ...
-% - Для вложенных списков: 1-й уровень — буквы, остальные — цифры.
-% - Пакет работает только если polyglossia уже загружен (через langsetup или xememoir).
+% 📌 Примечания:
+% - Все профили используют \asbuk для кириллицы (требует polyglossia).
+% - Для ссылок (\ref) используются те же счётчики, что и в label.
+% - Можно легко добавить новый профиль: скопируй блок и задай свою логику.
 
 \endinput
