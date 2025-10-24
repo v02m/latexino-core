@@ -20,22 +20,18 @@
 \makeatother
 
 % ======================================================================
-% 🎛️ Инициализация флагов профилей (если не определены в xememoir.sty)
+% 📋 ПРОФИЛИ СПИСКОВ
 % ======================================================================
-\@ifundefined{ifliststyle@gost}{\newif\ifliststyle@gost}{}%
-\@ifundefined{ifliststyle@numeric}{\newif\ifliststyle@numeric}{}%
-\@ifundefined{ifliststyle@mixed}{\newif\ifliststyle@mixed}{}%
-\@ifundefined{ifliststyle@alpha}{\newif\ifliststyle@alpha}{}%
-
-% По умолчанию — gost
-\ifliststyle@gost
-\else\ifliststyle@numeric
-\else\ifliststyle@mixed
-\else\ifliststyle@alpha
-\else
-\liststyle@gosttrue
-\fi\fi\fi\fi
-
+% Все флаги уже определены в xememoir.sty
+% Проверяем, существует ли хотя бы один флаг
+\makeatletter
+\@ifundefined{ifliststyle@gost}{
+  % Флаги НЕ определены — используем gost по умолчанию
+\setlist[enumerate,1]{label=\asbuk*.), ref=\asbuk*}
+\setlist[enumerate,2]{label=\arabic*.), ref=\arabic*}
+\setlist[enumerate,3]{label=\arabic*.), ref=\arabic*}
+}{
+% Флаги определены — используем их
 % ======================================================================
 % 📋 ПРОФИЛЬ: GOST — стандарт ГОСТ 2.105-95
 % ======================================================================
@@ -46,38 +42,38 @@
 \setlist[enumerate,1]{label=\asbuk*.), ref=\asbuk*}
 \setlist[enumerate,2]{label=\arabic*.), ref=\arabic*}
 \setlist[enumerate,3]{label=\arabic*.), ref=\arabic*}
-\fi
-
 % ======================================================================
 % 📋 ПРОФИЛЬ: NUMERIC — все уровни цифровые
 % ======================================================================
 % 1) → 1.1) → 1.1.1)
-\ifliststyle@numeric
+\else\ifliststyle@numeric
 \setlist[enumerate,1]{label=\arabic*.), ref=\arabic*}
 \setlist[enumerate,2]{label=\arabic{enumi}.\arabic*.), ref=\arabic{enumi}.\arabic*}
 \setlist[enumerate,3]{label=\arabic{enumi}.\arabic{enumii}.\arabic*.), ref=\arabic{enumi}.\arabic{enumii}.\arabic*}
-\fi
-
 % ======================================================================
 % 📋 ПРОФИЛЬ: MIXED — цифры → буквы → латиница
 % ======================================================================
 % 1) → а) → A)
-\ifliststyle@mixed
+\else\ifliststyle@mixed
 \setlist[enumerate,1]{label=\arabic*.), ref=\arabic*}
 \setlist[enumerate,2]{label=\asbuk*.), ref=\asbuk*}
 \setlist[enumerate,3]{label=\Alph*.), ref=\Alph*}
-\fi
-
 % ======================================================================
 % 📋 ПРОФИЛЬ: ALPHA — латиница → цифры → буквы
 % ======================================================================
 % a) → 1) → а)
-\ifliststyle@alpha
+\else\ifliststyle@alpha
 \setlist[enumerate,1]{label=\alph*.), ref=\alph*}
 \setlist[enumerate,2]{label=\arabic*.), ref=\arabic*}
 \setlist[enumerate,3]{label=\asbuk*.), ref=\asbuk*}
-\fi
-
+\else
+% Fallback: gost
+\setlist[enumerate,1]{label=\asbuk*.), ref=\asbuk*}
+\setlist[enumerate,2]{label=\arabic*.), ref=\arabic*}
+\setlist[enumerate,3]{label=\arabic*.), ref=\arabic*}
+\fi\fi\fi\fi
+}
+\makeatother
 % ======================================================================
 % 🔘 Маркированные списки — одинаковые для всех профилей (ГОСТ)
 % ======================================================================
@@ -100,5 +96,10 @@ align=left          % Метка выравнивается по левому к
 % - Все профили используют \asbuk для кириллицы (требует polyglossia).
 % - Для ссылок (\ref) используются те же счётчики, что и в label.
 % - Можно легко добавить новый профиль: скопируй блок и задай свою логику.
+
+\makeatletter
+\ifliststyle@gost \typeout{DEBUG: liststyle=gost}\fi
+\ifliststyle@mixed \typeout{DEBUG: liststyle=mixed}\fi
+\makeatother
 
 \endinput

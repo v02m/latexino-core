@@ -86,6 +86,54 @@
 % Сокращение
 \DeclareOption{graphicstyle}{\@xemg@classictrue}
 
+% Флаги стилей списков
+\newif\if@xeml@gost
+\newif\if@xeml@numeric
+\newif\if@xeml@mixed
+\newif\if@xeml@alpha
+
+% Опции
+
+% Опции списков — сброс всех флагов перед установкой
+\DeclareOption{liststyle=gost}{%
+  \@xeml@gostfalse
+  \@xeml@numericfalse
+  \@xeml@mixedfalse
+  \@xeml@alphafalse
+  \@xeml@gosttrue
+}
+\DeclareOption{liststyle=numeric}{%
+  \@xeml@gostfalse
+  \@xeml@numericfalse
+  \@xeml@mixedfalse
+  \@xeml@alphafalse
+  \@xeml@numerictrue
+}
+\DeclareOption{liststyle=mixed}{%
+  \@xeml@gostfalse
+  \@xeml@numericfalse
+  \@xeml@mixedfalse
+  \@xeml@alphafalse
+  \@xeml@mixedtrue
+}
+\DeclareOption{liststyle=alpha}{%
+  \@xeml@gostfalse
+  \@xeml@numericfalse
+  \@xeml@mixedfalse
+  \@xeml@alphafalse
+  \@xeml@alphatrue
+}
+\DeclareOption{liststyle}{%
+  \@xeml@gostfalse
+  \@xeml@numericfalse
+  \@xeml@mixedfalse
+  \@xeml@alphafalse
+  \@xeml@gosttrue
+}
+
+% По умолчанию — gost
+% \@xeml@gosttrue
+
 % Предупреждение о неизвестных опциях
 \DeclareOption*{%
   \PackageWarning{xememoir}{Unknown option '\CurrentOption'}
@@ -116,6 +164,12 @@
 \let\ifgraphicstyle@minimal\if@xemg@minimal
 \let\ifgraphicstyle@technical\if@xemg@technical
 \let\ifgraphicstyle@presentation\if@xemg@presentation
+
+% Экспорт флагов списков для enumsetup.sty
+\let\ifliststyle@gost\if@xeml@gost
+\let\ifliststyle@numeric\if@xeml@numeric
+\let\ifliststyle@mixed\if@xeml@mixed
+\let\ifliststyle@alpha\if@xeml@alpha
 
 % ======================================================================
 % 🔒 Защита от использования не с memoir
@@ -183,9 +237,9 @@
 \InputIfFileExists{mathsetup.sty}{}{%
   \typeout{Package xememoir: mathsetup.sty not found. Using defaults.}
 }
- \InputIfFileExists{enumsetup.sty}{}{%
-   \typeout{Package xememoir: enumsetup.sty not found. Using defaults.}
- }
+\InputIfFileExists{enumsetup.sty}{}{%
+  \typeout{Package xememoir: enumsetup.sty not found. Using defaults.}
+}
 
 % \InputIfFileExists{tablesetup.sty}{}{%
 %   \typeout{Package xememoir: tablesetup.sty not found. Using defaults.}
