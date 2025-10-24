@@ -1,0 +1,186 @@
+% ===========================
+% 🖼️ РАБОТА С ИЗОБРАЖЕНИЯМИ И ГРАФИКОЙ (С ПРОФИЛЯМИ)
+% ===========================
+% Поддержка профилей: classic, colorful, minimal, technical, presentation
+% Полностью совместим с memoir — НЕТ конфликта с caption.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{graphicssetup}[2025/10/21 Graphics profiles for memoir]
+
+% ======================================================================
+% 🎨 Инициализация флагов графики (гарантируем существование)
+% ======================================================================
+\newif\ifgraphicstyle@classic
+\newif\ifgraphicstyle@colorful
+\newif\ifgraphicstyle@minimal
+\newif\ifgraphicstyle@technical
+\newif\ifgraphicstyle@presentation
+
+% ======================================================================
+% 🖼️ Основа: graphicx + пути
+% ======================================================================
+\RequirePackage{graphicx}
+\graphicspath{{img/}}  % Папка для изображений
+
+% ======================================================================
+% 🖌️ Векторная графика: TikZ (общие библиотеки)
+% ======================================================================
+\RequirePackage{tikz}
+\usetikzlibrary{chains, shapes.geometric, shapes.symbols, arrows.meta, positioning, calc}
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18} % Укажите актуальную версию
+
+% ======================================================================
+% 🎨 Экспорт флагов профилей (ожидаем, что они определены в xememoir.sty)
+% ======================================================================
+
+\ifgraphicstyle@classic
+\else\ifgraphicstyle@colorful
+\else\ifgraphicstyle@minimal
+\else\ifgraphicstyle@technical
+\else\ifgraphicstyle@presentation
+\graphicstyle@classictrue
+\fi\fi\fi\fi\fi
+
+% ======================================================================
+% 🎨 ПРОФИЛЬ: CLASSIC — чёрно-белый, ГОСТ-совместимый
+% ======================================================================
+\ifgraphicstyle@classic
+% Цвета: только чёрный
+\RequirePackage{xcolor}
+\colorlet{graphicmain}{black}
+\colorlet{graphicaccent}{black}
+\colorlet{graphicbackground}{white}
+
+% TikZ: ч/б стиль
+\tikzset{
+  every picture/.style={
+    color=black,
+    line width=0.8pt,
+    font=\normalfont
+  },
+  accent/.style={color=graphicaccent}  % ← добавлено
+}
+\fi
+
+% ======================================================================
+% 🎨 ПРОФИЛЬ: COLORFUL — полноцветная, насыщенная графика
+% ======================================================================
+\ifgraphicstyle@colorful
+\RequirePackage{xcolor}
+\definecolor{graphicmain}{HTML}{2C3E50}
+\definecolor{graphicaccent}{HTML}{E74C3C}
+\definecolor{graphicbackground}{HTML}{F9F9F9}
+
+\tikzset{
+  every picture/.style={
+    color=graphicmain,
+    line width=1pt,
+    font=\normalfont
+  },
+  accent/.style={color=graphicaccent},
+  background/.style={fill=graphicbackground}
+}
+\fi
+
+% ======================================================================
+% 🎨 ПРОФИЛЬ: MINIMAL — тонкие линии, минимализм
+% ======================================================================
+\ifgraphicstyle@minimal
+\RequirePackage{xcolor}
+\colorlet{graphicmain}{gray!40}
+\colorlet{graphicaccent}{gray!20}
+\colorlet{graphicbackground}{white}
+
+\tikzset{
+  every picture/.style={
+    color=graphicmain,
+    line width=0.4pt,
+    font=\sffamily\small
+  },
+  accent/.style={color=graphicaccent}  % Добавил
+}
+\fi
+
+% ======================================================================
+% 🎨 ПРОФИЛЬ: TECHNICAL — для схем, чертежей, диаграмм
+% ======================================================================
+\ifgraphicstyle@technical
+\RequirePackage{xcolor}
+\definecolor{graphicmain}{RGB}{0,0,0}
+\definecolor{graphicaccent}{RGB}{0,100,200}
+\definecolor{graphicbackground}{RGB}{255,255,255}
+
+\tikzset{
+  every picture/.style={
+    color=graphicmain,
+    line width=0.6pt,
+    font=\ttfamily\footnotesize
+  },
+  signal/.style={draw=graphicaccent, fill=graphicaccent!10},
+  node/.style={draw, rectangle, minimum size=6mm},
+  accent/.style={color=graphicaccent}
+}
+\fi
+
+% ======================================================================
+% 🎨 ПРОФИЛЬ: PRESENTATION — крупные элементы, контрастные цвета
+% ======================================================================
+\ifgraphicstyle@presentation
+\RequirePackage{xcolor}
+\definecolor{graphicmain}{HTML}{FFFFFF}
+\definecolor{graphicaccent}{HTML}{FF6B6B}
+\definecolor{graphicbackground}{HTML}{2D3436}
+
+\tikzset{
+  every picture/.style={
+    color=graphicmain,
+    line width=2pt,
+    font=\sffamily\bfseries\Large
+  },
+  background/.style={fill=graphicbackground},
+  accent/.style={color=graphicaccent}
+}
+\fi
+
+% Добавляем стиль accent глобально (если не определён)
+\tikzset{
+  accent/.style={color=graphicaccent}
+}
+% ======================================================================
+% 📄 Дополнительные функции (опционально)
+% ======================================================================
+% Эти пакеты НЕ загружаются по умолчанию.
+% Раскомментируйте в своём проекте, если нужны:
+%
+% \RequirePackage{rotating}      % Для поворота объектов
+% \RequirePackage{pdflscape}     % Альбомные страницы
+% \RequirePackage{pdfpages}      % Вставка PDF
+
+% Для альбомных таблиц:
+%   \usepackage{rotating}      % → \begin{sidewaystable}...\end{sidewaystable}
+%   \usepackage{longtable}     % → таблицы на несколько страниц
+%
+% Для альбомных страниц:
+%   \usepackage{pdflscape}     % → \begin{landscape}...\end{landscape}
+%
+% Для вставки PDF:
+%   \usepackage{pdfpages}      % → \includepdf[pages=-]{file.pdf}
+
+% ======================================================================
+% 🖼️ SVG — ТОЛЬКО при явном запросе
+% ======================================================================
+\@ifundefined{ifusegraphicswithsvg}{}{
+  \ifusegraphicswithsvg
+  \RequirePackage{svg}
+  \fi
+}
+
+% ======================================================================
+% 💡 Примечания:
+% - Все профили используют xcolor и TikZ.
+% - memoir не требует caption — подписи настраиваются через \captionstyle.
+% - SVG включается только при \usegraphicswithsvgtrue + --shell-escape.
+% - Чтобы добавить новый профиль — скопируй блок и задай свои цвета/стили.
+
+\endinput

@@ -1,0 +1,226 @@
+% !TeX encoding = UTF-8
+% !TeX program = xelatex
+% !TeX spellcheck = ru_RU
+
+%% ======================================================================
+%%  xememoir.sty
+%% ======================================================================
+%% Автор: Valerie
+%% Версия: 1.0
+%% Дата: 2025/10/20
+%% Назначение: Основной стилевой пакет для документов на основе класса memoir,
+%%             скомпилированных с XeLaTeX и поддерживающих многоязычность через polyglossia.
+%%
+%% Особенности:
+%%   • Только для класса memoir.
+%%   • Предполагает использование XeLaTeX.
+%%   • Модульная структура: каждый аспект оформления вынесен в отдельный .sty-файл.
+%%   • Поддержка выбора шрифтов через опции: [msfonts], [liberation], [cmu].
+%%   • Не пытается поддерживать article/beamer — для них нужны отдельные пакеты.
+%% ======================================================================
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{xememoir}[2025/10/20 Custom memoir setup for XeLaTeX + polyglossia]
+
+% ======================================================================
+% 🎛️ ОБРАБОТКА ОПЦИЙ ПАКЕТА
+% ======================================================================
+% Поддерживаемые опции:
+%   • Шрифты: msfonts, liberation, cmu
+%   • Типографские профили: bookstyle=classic|modern|academic|poetry|technical|elegant|compact|bold
+% По умолчанию: msfonts + bookstyle=classic
+
+\newif\if@xem@ms
+\newif\if@xem@liberation
+\newif\if@xem@cmu
+
+% Флаги типографских профилей
+\newif\if@xem@classic
+\newif\if@xem@modern
+\newif\if@xem@academic
+\newif\if@xem@poetry
+\newif\if@xem@technical
+\newif\if@xem@elegant
+\newif\if@xem@compact
+\newif\if@xem@bold
+
+% Флаги графических профилей
+\newif\if@xemg@classic
+\newif\if@xemg@colorful
+\newif\if@xemg@minimal
+\newif\if@xemg@technical
+\newif\if@xemg@presentation
+
+% Устанавливаем значения по умолчанию
+\@xem@mstrue
+\@xem@classictrue
+
+% По умолчанию для стилей графики — classic
+\@xemg@classictrue
+
+% Объявляем опции шрифтов
+\DeclareOption{msfonts}{\@xem@mstrue}
+\DeclareOption{liberation}{\@xem@liberationtrue}
+\DeclareOption{cmu}{\@xem@cmutrue}
+
+% Объявляем опции типографских профилей
+\DeclareOption{bookstyle=classic}{\@xem@classictrue}
+\DeclareOption{bookstyle=modern}{\@xem@moderntrue}
+\DeclareOption{bookstyle=academic}{\@xem@academictrue}
+\DeclareOption{bookstyle=poetry}{\@xem@poetrytrue}
+\DeclareOption{bookstyle=technical}{\@xem@technicaltrue}
+\DeclareOption{bookstyle=elegant}{\@xem@eleganttrue}
+\DeclareOption{bookstyle=compact}{\@xem@compacttrue}
+\DeclareOption{bookstyle=bold}{\@xem@boldtrue}
+
+% Сокращение: bookstyle без значения = classic
+\DeclareOption{bookstyle}{\@xem@classictrue}
+
+% Опции графики
+\DeclareOption{graphicstyle=classic}{\@xemg@classictrue}
+\DeclareOption{graphicstyle=colorful}{\@xemg@colorfultrue}
+\DeclareOption{graphicstyle=minimal}{\@xemg@minimaltrue}
+\DeclareOption{graphicstyle=technical}{\@xemg@technicaltrue}
+\DeclareOption{graphicstyle=presentation}{\@xemg@presentationtrue}
+
+% Сокращение
+\DeclareOption{graphicstyle}{\@xemg@classictrue}
+
+% Предупреждение о неизвестных опциях
+\DeclareOption*{%
+  \PackageWarning{xememoir}{Unknown option '\CurrentOption'}
+}
+
+% Обрабатываем переданные опции
+\ProcessOptions\relax
+
+% Экспортируем флаги шрифтов в глобальную область,
+% которые ожидает fontswitch.sty
+\let\ifusemsfonts\if@xem@ms
+\let\ifuseliberationfonts\if@xem@liberation
+\let\ifusecmufonts\if@xem@cmu
+
+% Экспортируем флаги типографских профилей для layoutsetup.sty
+\let\ifbookstyle@classic\if@xem@classic
+\let\ifbookstyle@modern\if@xem@modern
+\let\ifbookstyle@academic\if@xem@academic
+\let\ifbookstyle@poetry\if@xem@poetry
+\let\ifbookstyle@technical\if@xem@technical
+\let\ifbookstyle@elegant\if@xem@elegant
+\let\ifbookstyle@compact\if@xem@compact
+\let\ifbookstyle@bold\if@xem@bold
+
+% Экспорт флагов графики для graphicssetup.sty
+\let\ifgraphicstyle@classic\if@xemg@classic
+\let\ifgraphicstyle@colorful\if@xemg@colorful
+\let\ifgraphicstyle@minimal\if@xemg@minimal
+\let\ifgraphicstyle@technical\if@xemg@technical
+\let\ifgraphicstyle@presentation\if@xemg@presentation
+%
+% ======================================================================
+% 🔒 Защита от использования не с memoir
+% ======================================================================
+% Проверяем, загружен ли класс memoir. Если нет — выдаём ошибку.
+% Это делает пакет "строгим": он работает ТОЛЬКО с memoir.
+\@ifclassloaded{memoir}{}{
+  \PackageError{xememoir}
+  {This package requires the 'memoir' document class.}
+  {Use \string\documentclass\{memoir\} in your main .tex file.}
+}
+
+% ======================================================================
+% 📦 Обязательные служебные пакеты
+% ======================================================================
+% Эти пакеты нужны для условной логики и безопасной загрузки.
+\RequirePackage{etoolbox} % Для \ifboolexpr, \patchcmd и т.д.
+% Примечание: iftex не нужен, так как мы жёстко привязаны к XeLaTeX.
+% 📦 Пакет etoolbox содержит полезные инструменты для условной логики и управления командами.
+
+% ======================================================================
+% 🖋️ Шрифты и язык — загрузка в правильном порядке
+% ======================================================================
+% fontspec должен быть загружен ДО polyglossia.
+% Язык и локаль управляются модулем langsetup.sty.
+
+%% 📦 Пакет fontspec необходим для работы с системными шрифтами в XeLaTeX и LuaLaTeX.
+\RequirePackage{fontspec}  % Обязательно для XeLaTeX
+
+% Подключаем langsetup.sty, который сам загрузит polyglossia
+% и настроит языки с нужными опциями (spelling=modern, babelshorthands=true).
+\InputIfFileExists{langsetup.sty}{}{%
+  \typeout{Package xememoir: langsetup.sty not found.}
+  \typeout{  --> Loading polyglossia with basic Russian/English setup.}
+  \RequirePackage{polyglossia}
+  \setmainlanguage{russian}
+  \setotherlanguage{english}
+}
+
+% ======================================================================
+% 🧩 Подключение модульных компонентов
+% ======================================================================
+% Используем \InputIfFileExists вместо \RequirePackage для НЕОБЯЗАТЕЛЬНЫХ модулей.
+% Это позволяет:
+%   • Работать даже если модуль отсутствует (например, в минимальной сборке).
+%   • Избежать ошибок "File not found".
+%   • Легко включать/выключать функционал через наличие файла.
+
+\InputIfFileExists{fontswitch.sty}{}{%
+  \typeout{Package xememoir: fontswitch.sty not found. Using fontspec defaults.}
+}
+
+% Для memoir НЕ используем geometry! Вместо этого — встроенные команды memoir.
+% Поэтому geometrysetup.sty НЕ подключаем.
+% Вместо этого подключаем layoutsetup.sty, который должен использовать:
+%   \setlrmarginsandblock, \setulmarginsandblock, \checkandfixthelayout
+\InputIfFileExists{layoutsetup.sty}{}{%
+  \typeout{Package xememoir: layoutsetup.sty not found. Using memoir defaults.}
+}
+
+%  Остальные модули — по желанию
+\InputIfFileExists{graphicssetup.sty}{}{%
+  \typeout{Package xememoir: graphicssetup.sty not found. Using defaults.}
+
+  \InputIfFileExists{mathsetup.sty}{}{%
+    \typeout{Package xememoir: mathsetup.sty not found. Using basic math (amsmath only).}
+  }
+
+  % Остальные — по мере необходимости
+  \InputIfFileExists{bibsetup.sty}{}{%
+    \typeout{Package xememoir: bibsetup.sty not found. Bibliography not configured.}
+  }
+
+  \InputIfFileExists{mathsetup.sty}{}{}
+
+  % \InputIfFileExists{enumsetup.sty}{}{}
+  % \InputIfFileExists{tablesetup.sty}{}{}%
+  % \InputIfFileExists{bibsetup.sty}{}{}
+  % \InputIfFileExists{listingssetup.sty}{}{}
+  % \InputIfFileExists{todo-setup.sty}{}{}
+  % \InputIfFileExists{pdf-setup.sty}{}{}
+
+  % ======================================================================
+  % 🎨 Цвета
+  % ======================================================================
+  % memoir не конфликтует с xcolor, но лучше загружать его явно.
+  % Опции передаём заранее, чтобы избежать конфликтов.
+  \PassOptionsToPackage{table,xcdraw}{xcolor}
+  \RequirePackage{xcolor}
+
+  % ======================================================================
+  % 📏 Микротипографика — улучшает выключку и устраняет Overfull \hbox
+  % ======================================================================
+  % Должен загружаться ПОСЛЕ fontspec и polyglossia.
+  \RequirePackage{microtype}
+
+  % ======================================================================
+  % ⚠️ Важные замечания
+  % ======================================================================
+  % 1. НЕ загружайте geometry — memoir имеет собственную систему управления layout.
+  % 2. Все настройки полей, колонтитулов, стилей глав — должны быть в layoutsetup.sty
+  %    с использованием команд memoir.
+  % 3. Если нужна поддержка beamer/article — создайте отдельные пакеты:
+  %      • xebeamer.sty
+  %      • xestandard.sty
+  %    Это упростит поддержку и избежит условной логики "на все случаи".
+
+  \endinput
