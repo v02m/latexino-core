@@ -334,3 +334,31 @@ Liberation & Свободная альтернатива \\
 % \bottomrule
 % \end{tabularx}
 % \end{table}
+
+## Настройка подписей через memoir (без caption!)
+
+В memoir не нужно подключать \usepackage{caption}.
+Вместо этого — используй встроенные команды:
+\captionstyle{<команды>} Общий стиль подписи (выравнивание, отступы)
+\captionnamefont{<шрифт>} Шрифт для «Таблица 1», «Рисунок 2»
+\captiontitlefont{<шрифт>} Шрифт для текста подписи
+\captiondelim{<разделитель>} Что между «Таблица 1» и текстом (по умолчанию :)
+
+- Получишь: «Таблица 1. Сравнение параметров» — как требует ГОСТ 2.105-95.
+
+## Полный пример: таблица по ГОСТ с объединением
+
+\begin{table}[ht]
+\centering
+\caption{Сравнение шрифтов}
+\begin{tabular}{lcc}
+\toprule
+\multicolumn{2}{c}{Группа шрифтов} & Размер \\
+\cmidrule(r){1-2}\cmidrule(l){3-3}
+Семейство & Тип & (pt) \\
+\midrule
+Times New Roman & Serif & 12 \\
+Arial & Sans & 12 \\
+\bottomrule
+\end{tabular}
+\end{table}

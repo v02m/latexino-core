@@ -25,23 +25,29 @@
 \captiontitlefont{\normalfont}
 \captionstyle{\centering}
 
+% Пример настройки по ГОСТ
+% % В преамбуле или в tablesetup.sty
+% \captionstyle{\centering\normalfont}        % Подпись по центру, обычный шрифт
+% \captionnamefont{\bfseries}                 % «Таблица 1» — жирным
+% \captiontitlefont{\normalfont}              % Текст — обычный
+% \captiondelim{. }                           % Разделитель: точка + пробел (ГОСТ!)
 % Пользовательские команды (латиница для совместимости)
 \newcommand{\newrow}{\tabularnewline\midrule} % Новая строка + линия
 \newcommand{\topcaption}[1]{\caption{#1}\vspace{6pt}} % Подпись сверху
 
 % Пример таблицы:
 % \begin{table}[ht]
-	%   \centering
-	%   \topcaption{Пример таблицы по ГОСТ}
-	%   \begin{tabularx}{\textwidth}{XX}
-		%     \toprule
-		%     Колонка 1 & Колонка 2 \\
-		%     \midrule
-		%     Данные & Данные \\
-		%     \newrow
-		%     Ещё данные & Ещё данные \\
-		%     \bottomrule
-		%   \end{tabularx}
-	% \end{table}
+%   \centering
+%   \topcaption{Пример таблицы по ГОСТ}
+%   \begin{tabularx}{\textwidth}{XX}
+%     \toprule
+%     Колонка 1 & Колонка 2 \\
+%     \midrule
+%     Данные & Данные \\
+%     \newrow
+%     Ещё данные & Ещё данные \\
+%     \bottomrule
+%   \end{tabularx}
+% \end{table}
 
 \endinput
