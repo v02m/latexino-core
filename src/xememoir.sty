@@ -183,9 +183,10 @@
 \InputIfFileExists{mathsetup.sty}{}{%
   \typeout{Package xememoir: mathsetup.sty not found. Using defaults.}
 }
-% \InputIfFileExists{enumsetup.sty}{}{%
-%   \typeout{Package xememoir: enumsetup.sty not found. Using defaults.}
-% }
+ \InputIfFileExists{enumsetup.sty}{}{%
+   \typeout{Package xememoir: enumsetup.sty not found. Using defaults.}
+ }
+
 % \InputIfFileExists{tablesetup.sty}{}{%
 %   \typeout{Package xememoir: tablesetup.sty not found. Using defaults.}
 % }

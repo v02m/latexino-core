@@ -1,0 +1,42 @@
+% ===========================
+% 🔢 ГОСТ-ОФОРМЛЕНИЕ СПИСКОВ
+% ===========================
+% Совместимо с memoir + polyglossia + XeLaTeX
+
+\NeedsTeXFormat{LaTeX2e}
+%\ProvidesPackage{enumsetup}[2025/10/24 GOST-compliant lists]
+
+% Загружаем enumitem с опцией совместимости
+\RequirePackage[shortlabels]{enumitem}
+
+% Поддержка русской нумерации (требует polyglossia)
+\makeatletter
+\providecommand{\asbuk}[1]{\expandafter\russian@alph\csname c@#1\endcsname}
+\AddEnumerateCounter{\asbuk}{\russian@alph}{щ}
+\makeatother
+
+% Настройка маркированных списков через enumitem (надёжнее \renewcommand)
+\setlist[itemize,1]{label=\normalfont\rmfamily\textemdash}
+\setlist[itemize,2]{label=\normalfont\rmfamily--}
+\setlist[itemize,3]{label=\normalfont\rmfamily*}
+\setlist[itemize,4]{label=\normalfont\rmfamily\textperiodcentered}
+
+% Настройка нумерованных списков по ГОСТ
+\setlist[enumerate,1]{label=\asbuk*.), ref=\asbuk*}
+\setlist[enumerate,2]{label=\arabic*.), ref=\arabic*}
+\setlist[enumerate,3]{label=\arabic*.), ref=\arabic*}
+
+% Глобальные параметры: компактность + выравнивание
+\setlist{
+nosep,
+labelindent=\parindent,
+leftmargin=*,
+align=left
+}
+
+% 📌 Примечание:
+% - ГОСТ 2.105-95 допускает: а) б) в) ... или 1) 2) 3) ...
+% - Для вложенных списков: 1-й уровень — буквы, остальные — цифры.
+% - Пакет работает только если polyglossia уже загружен (через langsetup или xememoir).
+
+\endinput
