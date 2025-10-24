@@ -1,1 +1,47 @@
+% ===========================
+% 📐 Настройка модуля таблиц (ГОСТ + memoir)
+% ===========================
+% Совместимо с memoir, не использует caption, следует ГОСТ 2.105-95
 
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tablesetup}[2025/10/25 GOST-compliant tables for memoir]
+
+% Базовые пакеты
+\RequirePackage{array}       % Расширенные столбцы
+\RequirePackage{tabularx}    % Автоширина
+\RequirePackage{booktabs}    % Качественные линии (top/mid/bottomrule)
+\RequirePackage{dcolumn}     % Выравнивание по десятичной точке
+\RequirePackage{multirow}    % Ячейки на несколько строк
+\RequirePackage{makecell}    % Управление содержимым ячеек
+\RequirePackage{xltabular}   % longtable + tabularx в одном
+
+% Настройки под ГОСТ:
+% - Нет вертикальных линий,
+% - Только \toprule, \midrule, \bottomrule,
+% - Подписи сверху (как в ГОСТ).
+
+% Улучшенные подписи через memoir (НЕ через caption!)
+\captionnamefont{\normalfont\bfseries}
+\captiontitlefont{\normalfont}
+\captionstyle{\centering}
+
+% Пользовательские команды (латиница для совместимости)
+\newcommand{\newrow}{\tabularnewline\midrule} % Новая строка + линия
+\newcommand{\topcaption}[1]{\caption{#1}\vspace{6pt}} % Подпись сверху
+
+% Пример таблицы:
+% \begin{table}[ht]
+	%   \centering
+	%   \topcaption{Пример таблицы по ГОСТ}
+	%   \begin{tabularx}{\textwidth}{XX}
+		%     \toprule
+		%     Колонка 1 & Колонка 2 \\
+		%     \midrule
+		%     Данные & Данные \\
+		%     \newrow
+		%     Ещё данные & Ещё данные \\
+		%     \bottomrule
+		%   \end{tabularx}
+	% \end{table}
+
+\endinput
