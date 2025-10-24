@@ -116,7 +116,7 @@
 \let\ifgraphicstyle@minimal\if@xemg@minimal
 \let\ifgraphicstyle@technical\if@xemg@technical
 \let\ifgraphicstyle@presentation\if@xemg@presentation
-%
+
 % ======================================================================
 % 🔒 Защита от использования не с memoir
 % ======================================================================
@@ -176,51 +176,56 @@
   \typeout{Package xememoir: layoutsetup.sty not found. Using memoir defaults.}
 }
 
-%  Остальные модули — по желанию
+% % Остальные модули — по желанию
 \InputIfFileExists{graphicssetup.sty}{}{%
   \typeout{Package xememoir: graphicssetup.sty not found. Using defaults.}
+}
+\InputIfFileExists{mathsetup.sty}{}{%
+  \typeout{Package xememoir: mathsetup.sty not found. Using defaults.}
+}
+% \InputIfFileExists{enumsetup.sty}{}{%
+%   \typeout{Package xememoir: enumsetup.sty not found. Using defaults.}
+% }
+% \InputIfFileExists{tablesetup.sty}{}{%
+%   \typeout{Package xememoir: tablesetup.sty not found. Using defaults.}
+% }
+% \InputIfFileExists{bibsetup.sty}{}{%
+%   \typeout{Package xememoir: bibsetup.sty not found. Using defaults.}
+% }
 
-  \InputIfFileExists{mathsetup.sty}{}{%
-    \typeout{Package xememoir: mathsetup.sty not found. Using basic math (amsmath only).}
-  }
+% \InputIfFileExists{listingssetup.sty}{}{%
+%   \typeout{Package xememoir: listingssetup.sty not found. Using defaults.}
+% }
+% \InputIfFileExists{todo-setup.sty}{}{%
+%   \typeout{Package xememoir: todo-setup.sty not found. Using defaults.}
+% }
+% \InputIfFileExists{pdf-setup.sty}{}{%
+%   \typeout{Package xememoir: pdf-setup.sty not found. Using defaults.}
+% }
 
-  % Остальные — по мере необходимости
-  \InputIfFileExists{bibsetup.sty}{}{%
-    \typeout{Package xememoir: bibsetup.sty not found. Bibliography not configured.}
-  }
+% ======================================================================
+% 🎨 Цвета
+% ======================================================================
+% memoir не конфликтует с xcolor, но лучше загружать его явно.
+% Опции передаём заранее, чтобы избежать конфликтов.
+\PassOptionsToPackage{table,xcdraw}{xcolor}
+\RequirePackage{xcolor}
 
-  \InputIfFileExists{mathsetup.sty}{}{}
+% ======================================================================
+% 📏 Микротипографика — улучшает выключку и устраняет Overfull \hbox
+% ======================================================================
+% Должен загружаться ПОСЛЕ fontspec и polyglossia.
+\RequirePackage{microtype}
 
-  % \InputIfFileExists{enumsetup.sty}{}{}
-  % \InputIfFileExists{tablesetup.sty}{}{}%
-  % \InputIfFileExists{bibsetup.sty}{}{}
-  % \InputIfFileExists{listingssetup.sty}{}{}
-  % \InputIfFileExists{todo-setup.sty}{}{}
-  % \InputIfFileExists{pdf-setup.sty}{}{}
+% ======================================================================
+% ⚠️ Важные замечания
+% ======================================================================
+% 1. НЕ загружайте geometry — memoir имеет собственную систему управления layout.
+% 2. Все настройки полей, колонтитулов, стилей глав — должны быть в layoutsetup.sty
+%    с использованием команд memoir.
+% 3. Если нужна поддержка beamer/article — создайте отдельные пакеты:
+%      • xebeamer.sty
+%      • xestandard.sty
+%    Это упростит поддержку и избежит условной логики "на все случаи".
 
-  % ======================================================================
-  % 🎨 Цвета
-  % ======================================================================
-  % memoir не конфликтует с xcolor, но лучше загружать его явно.
-  % Опции передаём заранее, чтобы избежать конфликтов.
-  \PassOptionsToPackage{table,xcdraw}{xcolor}
-  \RequirePackage{xcolor}
-
-  % ======================================================================
-  % 📏 Микротипографика — улучшает выключку и устраняет Overfull \hbox
-  % ======================================================================
-  % Должен загружаться ПОСЛЕ fontspec и polyglossia.
-  \RequirePackage{microtype}
-
-  % ======================================================================
-  % ⚠️ Важные замечания
-  % ======================================================================
-  % 1. НЕ загружайте geometry — memoir имеет собственную систему управления layout.
-  % 2. Все настройки полей, колонтитулов, стилей глав — должны быть в layoutsetup.sty
-  %    с использованием команд memoir.
-  % 3. Если нужна поддержка beamer/article — создайте отдельные пакеты:
-  %      • xebeamer.sty
-  %      • xestandard.sty
-  %    Это упростит поддержку и избежит условной логики "на все случаи".
-
-  \endinput
+\endinput

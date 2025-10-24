@@ -8,15 +8,6 @@
 \ProvidesPackage{graphicssetup}[2025/10/21 Graphics profiles for memoir]
 
 % ======================================================================
-% 🎨 Инициализация флагов графики (гарантируем существование)
-% ======================================================================
-\newif\ifgraphicstyle@classic
-\newif\ifgraphicstyle@colorful
-\newif\ifgraphicstyle@minimal
-\newif\ifgraphicstyle@technical
-\newif\ifgraphicstyle@presentation
-
-% ======================================================================
 % 🖼️ Основа: graphicx + пути
 % ======================================================================
 \RequirePackage{graphicx}
@@ -33,6 +24,11 @@
 % ======================================================================
 % 🎨 Экспорт флагов профилей (ожидаем, что они определены в xememoir.sty)
 % ======================================================================
+\@ifundefined{ifgraphicstyle@classic}{\newif\ifgraphicstyle@classic}{}%
+\@ifundefined{ifgraphicstyle@colorful}{\newif\ifgraphicstyle@colorful}{}%
+\@ifundefined{ifgraphicstyle@minimal}{\newif\ifgraphicstyle@minimal}{}%
+\@ifundefined{ifgraphicstyle@technical}{\newif\ifgraphicstyle@technical}{}%
+\@ifundefined{ifgraphicstyle@presentation}{\newif\ifgraphicstyle@presentation}{}%
 
 \ifgraphicstyle@classic
 \else\ifgraphicstyle@colorful
