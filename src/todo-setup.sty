@@ -1,0 +1,44 @@
+% ===========================
+% 🗒️ ЗАМЕТКИ И ПРИМЕЧАНИЯ (ГИБКИЙ РЕЖИМ DRAFT/FINAL)
+% ===========================
+% Автоматически отключается в режиме final
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{todo-setup}[2025/10/25 Draft notes for memoir]
+
+% Автоматическое отключение в final-режиме
+\RequirePackage[
+colorinlistoftodos,
+prependcaption,
+textsize=tiny,
+\ifdefined\@final\@gobble\else draft\fi % ← включает draft только если не final
+]{todonotes}
+
+% Пользовательские команды (латиница для совместимости)
+\newcommand{\unsure}[2][]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommand{\change}[2][]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+\newcommand{\info}[2][]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+\newcommand{\improvement}[2][]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+\newcommand{\done}[2][]{\todo[disable,#1]{#2}} % скрытая заметка
+
+% Inline-заметки
+\newcommand{\inlinetodo}[2][]{\todo[inline,#1]{#2}}
+
+
+% Список задач (латиница)
+\newcommand{\listoftodospage}{%
+	\clearpage
+	\listoftodos[List of Todos]
+	\clearpage
+}
+
+% Удобный макрос для быстрого помета
+\newcommand{\workedout}{\inlinetodo{Отработано}}
+
+% 📌 Примечания:
+% - В режиме final все заметки автоматически скрываются.
+% - Чтобы включить final-режим, добавьте в преамбулу:
+%     \makeatletter\def\@final{}\makeatother
+% - Или используйте \usepackage[final]{xememoir} (если реализовано).
+
+\endinput
