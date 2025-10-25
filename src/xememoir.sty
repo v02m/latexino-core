@@ -254,9 +254,10 @@
 \InputIfFileExists{todo-setup.sty}{}{%
   \typeout{Package xememoir: todo-setup.sty not found. Using defaults.}
 }
-% \InputIfFileExists{pdf-setup.sty}{}{%
-%   \typeout{Package xememoir: pdf-setup.sty not found. Using defaults.}
-% }
+
+\InputIfFileExists{pdf-setup.sty}{}{%
+  \typeout{Package xememoir: pdf-setup.sty not found. Using defaults.}
+}
 
 % ======================================================================
 % 🎨 Цвета

@@ -405,3 +405,9 @@ Arial & Sans & 12 \\
 % В финальной версии — добавь в преамбулу:
 % \makeatletter\def\@final{}\makeatother
 % → все заметки исчезнут автоматически.
+
+## Примеры использлвания
+
+\inlinetodo{Обычная заметка}
+\inlinetodo[backgroundcolor=yellow]{Важно!}
+\inlinetodo[linecolor=green,disable]{Скрыть в финале}
