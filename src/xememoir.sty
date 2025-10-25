@@ -241,9 +241,9 @@
   \typeout{Package xememoir: enumsetup.sty not found. Using defaults.}
 }
 
-% \InputIfFileExists{tablesetup.sty}{}{%
-%   \typeout{Package xememoir: tablesetup.sty not found. Using defaults.}
-% }
+\InputIfFileExists{tablesetup.sty}{}{%
+  \typeout{Package xememoir: tablesetup.sty not found. Using defaults.}
+}
 % \InputIfFileExists{bibsetup.sty}{}{%
 %   \typeout{Package xememoir: bibsetup.sty not found. Using defaults.}
 % }

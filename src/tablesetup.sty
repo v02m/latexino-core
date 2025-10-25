@@ -7,25 +7,30 @@
 \ProvidesPackage{tablesetup}[2025/10/25 GOST-compliant tables for memoir]
 
 % Базовые пакеты
-\RequirePackage{array}       % Расширенные столбцы
-\RequirePackage{tabularx}    % Автоширина
-\RequirePackage{booktabs}    % Качественные линии (top/mid/bottomrule)
+\RequirePackage{array}       % Расширенные столбцы (>{...}, <{...})
+\RequirePackage{tabularx}    % Автоширина столбцов
+\RequirePackage{booktabs}    % Качественные линии: \toprule, \midrule, \bottomrule
 \RequirePackage{dcolumn}     % Выравнивание по десятичной точке
-\RequirePackage{multirow}    % Ячейки на несколько строк
-\RequirePackage{makecell}    % Управление содержимым ячеек
-\RequirePackage{xltabular}   % longtable + tabularx в одном
+\RequirePackage{multirow}    % Объединение ячеек по вертикали
+\RequirePackage{makecell}    % Переносы в ячейках: \makecell, \thead
+\RequirePackage{xltabular}   % longtable + tabularx для таблиц на несколько страниц
 
 % Настройки под ГОСТ:
 % - Нет вертикальных линий,
 % - Только \toprule, \midrule, \bottomrule,
 % - Подписи сверху (как в ГОСТ).
 
+% ======================================================================
+% 📏 Настройка подписей через memoir (ГОСТ-совместимо)
+% ======================================================================
+% ГОСТ 2.105-95: "Таблица 1. Название" (точка + пробел)
 % Улучшенные подписи через memoir (НЕ через caption!)
-\captionnamefont{\normalfont\bfseries}
-\captiontitlefont{\normalfont}
-\captionstyle{\centering}
-\captiondelim{. }
 % Разделитель: точка + пробел (ГОСТ!)
+\captiondelim{. }           % Разделитель между "Таблица N" и текстом
+\captionnamefont{\bfseries} % "Таблица 1" — жирным
+\captiontitlefont{\normalfont} % Текст — обычным шрифтом
+\captionstyle{\centering}   % Подпись по центру (можно заменить на \raggedright)
+
 % Пользовательские команды (латиница для совместимости)
 \newcommand{\newrow}{\tabularnewline\midrule} % Новая строка + линия
 \newcommand{\topcaption}[1]{\caption{#1}\vspace{6pt}} % Подпись сверху
@@ -44,5 +49,41 @@
 %     \bottomrule
 %   \end{tabularx}
 % \end{table}
+
+% Пример использования:
+% \begin{table}[ht]
+%   \centering
+%   \caption{Сравнение шрифтов}
+%   \begin{tabularx}{\textwidth}{lX}
+%     \toprule
+%     Шрифт & Описание \\
+%     \midrule
+%     Times New Roman & Стандартный для ГОСТ \\
+%     \newrow
+%     Liberation & Свободная альтернатива \\
+%     \bottomrule
+%   \end{tabularx}
+% \end{table}
+
+% Для таблиц на несколько страниц:
+% \begin{xltabular}{\textwidth}{lX}
+%   \caption{Длинная таблица} \\
+%   \toprule
+%   Параметр & Значение \\
+%   \midrule
+%   \endfirsthead
+%
+%   \multicolumn{2}{c}{{\bfseries Продолжение таблицы}} \\
+%   \toprule
+%   Параметр & Значение \\
+%   \midrule
+%   \endhead
+%
+%   \bottomrule
+%   \endlastfoot
+%
+%   Температура & 25\,\si{\celsius} \\
+%   % ... много строк ...
+% \end{xltabular}
 
 \endinput
