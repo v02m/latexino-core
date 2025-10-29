@@ -951,3 +951,33 @@ def hello():
 print("Привет, мир!")
 \end{lstlisting}
 Получишь ГОСТ-совместимый, читаемый, оформленный листинг.
+
+## Модуль bibsetup
+
+Нет стиля списка Добавлены \bibhang, \bibitemsep ГОСТ требует висячий отступ
+1.25 см
+
+dashed=true по умолчанию dashed=false ГОСТ не разрешает замену авторов на тире
+Нет проверки biblatex-gost Добавлена Чёткая ошибка, если пакет не установлен
+
+### Как использовать в документе
+
+% В преамбуле:
+\usepackage{bibsetup}
+
+% В теле документа:
+Цитата \autocite{petrov2020}.
+
+% В конце:
+\printbibliography[title={Список литературы}]
+
+Убедись, что у тебя установлен biblatex-gost:
+tlmgr install biblatex-gost
+
+✅ Компиляция
+Для работы с biblatex + biber нужна трёхэтапная компиляция:
+xelatex My-pr.tex
+biber My-pr
+xelatex My-pr.tex
+
+(В TeXstudio / VS Code это делается автоматически при настройке цепочки.)

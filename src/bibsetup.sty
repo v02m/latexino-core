@@ -1,0 +1,53 @@
+% ===========================
+% 📚 БИБЛИОГРАФИЯ (ГОСТ 7.0.5–2008)
+% ===========================
+% Совместимо с memoir, polyglossia, XeLaTeX
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{bibsetup}[2025/10/26 GOST bibliography for memoir]
+
+% Поддержка языковых кавычек
+\RequirePackage{csquotes}
+
+% Проверка наличия biblatex-gost
+\IfFileExists{biblatex-gost.sty}{}{
+	\PackageError{bibsetup}{Package 'biblatex-gost' not found. Install it via tlmgr install biblatex-gost}{}
+}
+
+% Настройка biblatex
+\RequirePackage[
+backend=biber,
+style=gost-numeric,
+language=auto,
+bibencoding=utf8,
+sorting=nyt,
+autocite=inline,
+doi=true,
+url=true,
+isbn=false,
+dashed=false,          % Не заменять повторяющихся авторов на тире
+maxbibnames=99         % Показывать всех авторов
+]{biblatex}
+
+% ======================================================================
+% 📏 Стиль списка литературы под ГОСТ + memoir
+% ======================================================================
+% ГОСТ 7.0.5–2008: абзацный отступ, без маркеров, одинарный интервал
+\renewcommand*{\bibfont}{\normalfont\small}
+\setlength{\bibitemsep}{0pt}      % Отступ между записями
+\setlength{\bibhang}{1.25cm}      % Висячий отступ (по ГОСТ)
+\setlength{\bibitemindent}{0pt}   % Нет дополнительного отступа
+
+% Для memoir: отключаем нумерацию в оглавлении
+\makeatletter
+\def\blx@maxcitenames{99}
+\makeatother
+
+% ======================================================================
+% 💡 Использование:
+% 1. В .tex-файле укажите: \addbibresource{myrefs.bib}
+% 2. Цитируйте: \autocite{key}, \cite{key}, \parencite{key}
+% 3. Выведите список: \printbibliography[title={Список литературы}]
+% ======================================================================
+
+\endinput
