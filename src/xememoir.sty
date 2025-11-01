@@ -244,14 +244,14 @@
 \InputIfFileExists{tablesetup.sty}{}{%
   \typeout{Package xememoir: tablesetup.sty not found. Using defaults.}
 }
-% \InputIfFileExists{bibsetup.sty}{}{%
-%   \typeout{Package xememoir: bibsetup.sty not found. Using defaults.}
-% }
+\InputIfFileExists{bibsetup.sty}{}{%
+  \typeout{Package xememoir: bibsetup.sty not found. Using defaults.}
+}
 
 % Раскомменировать при необходимости
-% \InputIfFileExists{listingssetup.sty}{}{%
-%   \typeout{Package xememoir: listingssetup.sty not found. Using defaults.}
-% }
+\InputIfFileExists{listingssetup.sty}{}{%
+  \typeout{Package xememoir: listingssetup.sty not found. Using defaults.}
+}
 \InputIfFileExists{todo-setup.sty}{}{%
   \typeout{Package xememoir: todo-setup.sty not found. Using defaults.}
 }
