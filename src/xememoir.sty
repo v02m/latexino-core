@@ -168,12 +168,20 @@
   }%
 }
 
-% --- 5️⃣ Дополнительные модули (math, tables, bib, todo, listings, pdf)
+% --- 5️⃣ Bibliography (ГОСТ / GOST)
+\InputIfFileExists{xememoir-bib.sty}{}{%
+  \typeout{[xememoir] xememoir-bib.sty not found, fallback to bibsetup.sty.}%
+  \InputIfFileExists{bibsetup.sty}{}{%
+    \typeout{[xememoir] bibsetup.sty not found, using defaults.}%
+  }%
+}
+
+% --- 6 Дополнительные модули (math, tables, bib, todo, listings, pdf)
 \InputIfFileExists{xememoir-modules.sty}{}{%
   \typeout{[xememoir] xememoir-modules.sty not found, fallback to old modules.}%
   \InputIfFileExists{mathsetup.sty}{}{\typeout{[xememoir] mathsetup.sty not found, using defaults.}}%
   \InputIfFileExists{tablesetup.sty}{}{\typeout{[xememoir] tablesetup.sty not found, using defaults.}}%
-  \InputIfFileExists{bibsetup.sty}{}{\typeout{[xememoir] bibsetup.sty not found, using defaults.}}%
+  %\InputIfFileExists{bibsetup.sty}{}{\typeout{[xememoir] bibsetup.sty not found, using defaults.}}%
   \InputIfFileExists{todo-setup.sty}{}{\typeout{[xememoir] todo-setup.sty not found, using defaults.}}%
   \InputIfFileExists{listingssetup.tex}{}{\typeout{[xememoir] listingssetup.tex not found, using defaults.}}%
   \InputIfFileExists{pdf-setup.sty}{}{\typeout{[xememoir] pdf-setup.sty not found, using defaults.}}%

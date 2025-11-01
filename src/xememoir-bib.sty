@@ -1,0 +1,45 @@
+%%% ===========================
+%%% XEMEMOIR BIB MODULE (GOST)
+%%% Refactor Branch
+%%% Author: Valery
+%%% Date: 2025-11-01
+%%% ===========================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{xememoir-bib}[2025/11/01 GOST bibliography for memoir]
+
+% Поддержка языковых кавычек
+\RequirePackage{csquotes}
+
+% Проверка наличия biblatex-gost через LaTeX
+\IfFileExists{biblatex-gost.sty}{%
+  \typeout{[xememoir-bib] Found biblatex-gost package. Loading...}%
+}{%
+  \PackageWarning{xememoir-bib}{Package 'biblatex-gost' not found. Please install via tlmgr install biblatex-gost}%
+}
+
+% Подключение biblatex-gost
+\RequirePackage[
+  backend=biber,
+  style=gost-numeric,
+  language=auto,
+  bibencoding=utf8,
+  sorting=nyt,
+  autocite=inline,
+  doi=true,
+  url=true,
+  isbn=false,
+  dashed=false,
+  maxbibnames=99
+]{biblatex-gost}
+
+% Настройка формата библиографии
+\renewcommand*{\bibfont}{\normalfont\small}
+\setlength{\bibitemsep}{0pt}
+\setlength{\bibhang}{1.25cm}
+\setlength{\bibitemindent}{0pt}
+
+\makeatletter
+\def\blx@maxcitenames{99}
+\makeatother
+
+\endinput
