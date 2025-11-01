@@ -9,6 +9,8 @@
 %%      Основной модуль для класса `memoir`, адаптированный
 %%      под XeLaTeX. Содержит системные макросы, флаги и
 %%      вызовы модулей пакета xememoir.sty.
+%%      Поддержка пошагового рефакторинга.
+%%      Позволяет переключать старую/новую логику подключения модулей.
 %%
 %%  Encoding: UTF-8
 %%  Engine:   XeLaTeX
@@ -22,120 +24,148 @@
 %%             * унифицирована структура блоков
 %%             * подготовка к kvoptions
 %%===========================================================
+
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{xememoir}[2025/11/01 v1.0 Центральный модуль настроек]
+\ProvidesPackage{xememoir}[2025/11/01 v3.0 Refactored memoir setup for XeLaTeX]
 
-%% ===============================
-%%  ФЛАГИ ПРОФИЛЕЙ
-%% ===============================
-\newif\ifusefonts      % Включение пользовательских шрифтов
-\newif\ifuselayout     % Включение макета страницы
-\newif\ifusegraphics   % Включение графических профилей
-\newif\ifuselistings   % Включение настроек листингов
-\newif\ifusetables     % Включение таблиц
-\newif\ifusemath       % Включение математических макросов
-\newif\ifusebib        % Включение библиографии
-\newif\ifusetodo       % Включение TODO заметок
-\newif\ifusedraft      % Включение режима черновика
+% ======================================================================
+% 🎛️  ВЫБОР РЕЖИМА: СТАРЫЙ/НОВЫЙ
+% ======================================================================
+\newif\ifxememoir@usenew
+\xememoir@usenewtrue   % переключатель на новую модульную структуру
+% \xememoir@usenewfalse  % если нужно оставить старое поведение
 
-% Флаги по умолчанию
-\usefontstrue
-\uselayouttrue
-\usegraphicstrue
-\uselistingstrue
-\usetablesthru
-\usemathtrue
-\usebibtrue
-\usetodotrue
-\usedrafttrue
+% ======================================================================
+% 🔒  Проверка memoir
+% ======================================================================
+\@ifclassloaded{memoir}{}{
+  \PackageError{xememoir}{This package requires the 'memoir' document class.}
+  {Use \string\documentclass\{memoir\} in your main .tex file.}
+}
 
-%% ===============================
-%%  ЗАГРУЗКА ПАКЕТОВ
-%% ===============================
-\RequirePackage{ifthen}
-\RequirePackage{xcolor}
-\RequirePackage{polyglossia}
-\RequirePackage{tikz}
-\RequirePackage{geometry}
-\RequirePackage{microtype}
-\RequirePackage{hyperref}
-
-%% ===============================
-%%  ШРИФТЫ
-%% ===============================
-\ifusefonts
+% ======================================================================
+% 📦  БАЗОВЫЕ ПАКЕТЫ
+% ======================================================================
+\RequirePackage{etoolbox}
 \RequirePackage{fontspec}
-\input{xememoir-fonts.sty}  % Модуль выбора шрифтов
-\fi
+\PassOptionsToPackage{table,xcdraw}{xcolor}
+\RequirePackage{xcolor}
+\RequirePackage{microtype}
 
-%% ===============================
-%%  МАКЕТ
-%% ===============================
-\ifuselayout
-\input{xememoir-layout.sty}  % Модуль настройки полей, колонтитулов, профилей
-\fi
+% ======================================================================
+% 🧩  ОБЩИЕ ФЛАГИ
+% ======================================================================
+% NOTE: пока ручные, позже перейти на kvoptions
+\newif\if@xem@ms
+\newif\if@xem@liberation
+\newif\if@xem@cmu
 
-%% ===============================
-%%  ГРАФИКА
-%% ===============================
-\ifusegraphics
-\input{xememoir-graphics.sty}
-\fi
+\newif\if@xem@classic
+\newif\if@xem@modern
+\newif\if@xem@academic
+\newif\if@xem@poetry
+\newif\if@xem@technical
+\newif\if@xem@elegant
+\newif\if@xem@compact
+\newif\if@xem@bold
 
-%% ===============================
-%%  СПИСКИ
-%% ===============================
-\input{xememoir-enum.sty}
+\newif\if@xemg@classic
+\newif\if@xemg@colorful
+\newif\if@xemg@minimal
+\newif\if@xemg@technical
+\newif\if@xemg@presentation
 
-%% ===============================
-%%  МАТЕМАТИКА
-%% ===============================
-\ifusemath
-\input{xememoir-math.sty}
-\fi
+\newif\if@xeml@gost
+\newif\if@xeml@numeric
+\newif\if@xeml@mixed
+\newif\if@xeml@alpha
 
-%% ===============================
-%%  ТАБЛИЦЫ
-%% ===============================
-\ifusetables
-\input{xememoir-tables.sty}
-\fi
+% значения по умолчанию
+\@xem@mstrue
+\@xem@classictrue
+\@xemg@classictrue
+\@xeml@gosttrue
 
-%% ===============================
-%%  БИБЛИОГРАФИЯ
-%% ===============================
-\ifusebib
-\input{xememoir-bib.sty}
-\fi
+% ======================================================================
+% 🧩  ПОДКЛЮЧЕНИЕ МОДУЛЕЙ ПО РЕЖИМУ
+% ======================================================================
+\ifxememoir@usenew
+% ✅ Новая модульная структура
 
-%% ===============================
-%%  TODO ЗАМЕТКИ
-%% ===============================
-\ifusetodo
-\input{xememoir-todo.sty}
-\fi
+% --- 1️⃣ Шрифты
+\InputIfFileExists{xememoir-fonts.sty}{}{%
+  \typeout{[xememoir] xememoir-fonts.sty not found, fallback to fontswitch.sty.}%
+  \InputIfFileExists{fontswitch.sty}{}{%
+    \typeout{[xememoir] fontswitch.sty not found, using fontspec defaults.}%
+  }%
+}
 
-%% ===============================
-%%  ЛИСТИНГИ
-%% ===============================
-\ifuselistings
-\input{xememoir-listings.sty}
-\fi
+% --- 2️⃣ Layout (поля, колонтитулы)
+\InputIfFileExists{xememoir-layout.sty}{}{%
+  \typeout{[xememoir] xememoir-layout.sty not found, fallback to layoutsetup.sty.}%
+  \InputIfFileExists{layoutsetup.sty}{}{%
+    \typeout{[xememoir] layoutsetup.sty not found, using memoir defaults.}%
+  }%
+}
 
-%% ===============================
-%%  PDF МЕТАДАННЫЕ
-%% ===============================
-\input{xememoir-pdf.sty}
+% --- 3️⃣ Graphics (графика и профили)
+\InputIfFileExists{xememoir-graphics.sty}{}{%
+  \typeout{[xememoir] xememoir-graphics.sty not found, fallback to graphicssetup.sty.}%
+  \InputIfFileExists{graphicssetup.sty}{}{%
+    \typeout{[xememoir] graphicssetup.sty not found, using defaults.}%
+  }%
+}
 
-%% ===============================
-%%  РЕЖИМ ЧЕРНОВИКА
-%% ===============================
-\ifusedraft
-\newcommand{\draftnote}[1]{\textcolor{red}{#1}}
+% --- 4️⃣ Lists (стили списков)
+\InputIfFileExists{xememoir-lists.sty}{}{%
+  \typeout{[xememoir] xememoir-lists.sty not found, fallback to enumsetup.sty.}%
+  \InputIfFileExists{enumsetup.sty}{}{%
+    \typeout{[xememoir] enumsetup.sty not found, using defaults.}%
+  }%
+}
+
+% --- 5️⃣ Дополнительные модули (math, tables, bib, todo, listings, pdf)
+\InputIfFileExists{xememoir-modules.sty}{}{%
+  \typeout{[xememoir] xememoir-modules.sty not found, fallback to old modules.}%
+  \InputIfFileExists{mathsetup.sty}{}{\typeout{[xememoir] mathsetup.sty not found, using defaults.}}%
+  \InputIfFileExists{tablesetup.sty}{}{\typeout{[xememoir] tablesetup.sty not found, using defaults.}}%
+  \InputIfFileExists{bibsetup.sty}{}{\typeout{[xememoir] bibsetup.sty not found, using defaults.}}%
+  \InputIfFileExists{todo-setup.sty}{}{\typeout{[xememoir] todo-setup.sty not found, using defaults.}}%
+  \InputIfFileExists{listingssetup.tex}{}{\typeout{[xememoir] listingssetup.tex not found, using defaults.}}%
+  \InputIfFileExists{pdf-setup.sty}{}{\typeout{[xememoir] pdf-setup.sty not found, using defaults.}}%
+}
+
 \else
-\newcommand{\draftnote}[1]{}
+% ⚠️ Старая логика подключения
+\typeout{[xememoir] Using old module loading logic.}%
+% Здесь вставляем старые include/require блоки, чтобы тестировать обратную совместимость
 \fi
 
-%% ==========================================================
-%%  Конец файла xememoir.sty
-%% ==========================================================
+% ======================================================================
+% 🔗  Hyperref (подключение последним)
+% ======================================================================
+\IfFileExists{hyperref.sty}{%
+  \PassOptionsToPackage{unicode}{hyperref}%
+  \RequirePackage{hyperref}%
+  \hypersetup{%
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue,
+    bookmarksnumbered=true,
+    bookmarksopen=true,
+    bookmarksopenlevel=1
+  }%
+}{}
+
+% ======================================================================
+% 📝  DIAGNOSTИКА АКТИВНЫХ ФЛАГОВ
+% ======================================================================
+\AtEndOfPackage{%
+  \typeout{[xememoir] Active font flags: ms=\if@xem@ms, liberation=\if@xem@liberation, cmu=\if@xem@cmu}%
+  \typeout{[xememoir] Active bookstyle flags: classic=\if@xem@classic, modern=\if@xem@modern, academic=\if@xem@academic, poetry=\if@xem@poetry, technical=\if@xem@technical, elegant=\if@xem@elegant, compact=\if@xem@compact, bold=\if@xem@bold}%
+  \typeout{[xememoir] Active graphicstyle flags: classic=\if@xemg@classic, colorful=\if@xemg@colorful, minimal=\if@xemg@minimal, technical=\if@xemg@technical, presentation=\if@xemg@presentation}%
+  \typeout{[xememoir] Active liststyle flags: gost=\if@xeml@gost, numeric=\if@xeml@numeric, mixed=\if@xeml@mixed, alpha=\if@xeml@alpha}%
+}
+
+\endinput
