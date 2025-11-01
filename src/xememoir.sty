@@ -53,13 +53,15 @@
 \RequirePackage{microtype}
 
 % ======================================================================
-% 🧩  ОБЩИЕ ФЛАГИ
+% 🧩  ОБЩИЕ ФЛАГИ ПАКЕТА xememoir
 % ======================================================================
-% NOTE: пока ручные, позже перейти на kvoptions
+% NOTE: Пока ручные флаги, позже можно перейти на kvoptions
+% Флаги для выбора шрифтов
 \newif\if@xem@ms
 \newif\if@xem@liberation
 \newif\if@xem@cmu
 
+% Флаги для типографических профилей книги
 \newif\if@xem@classic
 \newif\if@xem@modern
 \newif\if@xem@academic
@@ -69,22 +71,64 @@
 \newif\if@xem@compact
 \newif\if@xem@bold
 
+% Флаги для графических профилей
 \newif\if@xemg@classic
 \newif\if@xemg@colorful
 \newif\if@xemg@minimal
 \newif\if@xemg@technical
 \newif\if@xemg@presentation
 
+% Флаги для стилей списков
 \newif\if@xeml@gost
 \newif\if@xeml@numeric
 \newif\if@xeml@mixed
 \newif\if@xeml@alpha
 
-% значения по умолчанию
-\@xem@mstrue
-\@xem@classictrue
-\@xemg@classictrue
-\@xeml@gosttrue
+% ======================================================================
+% 🔗  Алиасы для старых имен (для обратной совместимости)
+% ======================================================================
+% Bookstyle aliases
+\let\ifbookstyle@classic=\if@xem@classic
+\let\ifbookstyle@modern=\if@xem@modern
+\let\ifbookstyle@academic=\if@xem@academic
+\let\ifbookstyle@poetry=\if@xem@poetry
+\let\ifbookstyle@technical=\if@xem@technical
+\let\ifbookstyle@elegant=\if@xem@elegant
+\let\ifbookstyle@compact=\if@xem@compact
+\let\ifbookstyle@bold=\if@xem@bold
+
+% Liststyle aliases
+\let\ifliststyle@gost=\if@xeml@gost
+\let\ifliststyle@numeric=\if@xeml@numeric
+\let\ifliststyle@mixed=\if@xeml@mixed
+\let\ifliststyle@alpha=\if@xeml@alpha
+
+% Font selection aliases
+\let\ifusemsfonts=\if@xem@ms
+\let\ifuseliberationfonts=\if@xem@liberation
+\let\ifusecmufonts=\if@xem@cmu
+
+% Graphic style aliases
+\let\ifgraphicstyle@classic=\if@xemg@classic
+\let\ifgraphicstyle@colorful=\if@xemg@colorful
+\let\ifgraphicstyle@minimal=\if@xemg@minimal
+\let\ifgraphicstyle@technical=\if@xemg@technical
+\let\ifgraphicstyle@presentation=\if@xemg@presentation
+
+% ======================================================================
+% ⚙️  Значения по умолчанию (можно закомментировать для теста)
+% ======================================================================
+%\@xem@mstrue       % по умолчанию используем Microsoft fonts
+%\@xem@classictrue  % типографика — классическая
+%\@xemg@classictrue % графика — классическая
+%\@xeml@gosttrue    % списки — ГОСТ
+
+% 🔹 Примечание:
+% Если при тестировании закомментировать все флаги, включится fallback:
+% - Шрифты CMU
+% - Типографика classic
+% - Графика classic
+% - Списки ГОСТ
 
 % ======================================================================
 % 🧩  ПОДКЛЮЧЕНИЕ МОДУЛЕЙ ПО РЕЖИМУ
