@@ -1,0 +1,77 @@
+\documentclass[12pt]{memoir}
+
+% ======================================================================
+% Подключение центрального пакета xememoir
+% ======================================================================
+\usepackage{ifthen} % для демонстрации условной логики, если потребуется
+\usepackage{xememoir}
+
+% ======================================================================
+% Настройка флагов вручную (для теста)
+% ======================================================================
+% Типографские профили
+\@xem@mstrue
+\@xem@classictrue
+\@xem@modernfalse
+\@xem@academicfalse
+\@xem@poetryfalse
+\@xem@technicalfalse
+\@xem@elegantfalse
+\@xem@compactfalse
+\@xem@boldfalse
+
+% Графические профили
+\@xemg@classictrue
+\@xemg@colorfulfalse
+\@xemg@minimalfalse
+\@xemg@technicalfalse
+\@xemg@presentationfalse
+
+% Стили списков
+\@xeml@gosttrue
+\@xeml@numericfalse
+\@xeml@mixedfalse
+\@xeml@alphafalse
+
+% ======================================================================
+% Заголовок документа
+% ======================================================================
+\title{Тестовый документ для пакета xememoir}
+\author{Valery}
+\date{\today}
+
+\begin{document}
+
+	\maketitle
+
+	% ======================================================================
+	% Тест полей, шрифтов, списков и гиперссылок
+	% ======================================================================
+
+	\chapter{Введение}
+	Это тестовый документ для проверки работы центрального модуля \texttt{xememoir.sty}.
+	Ниже пример списка:
+
+	\begin{itemize}
+		\item Первый элемент
+		\item Второй элемент
+		\item Третий элемент
+	\end{itemize}
+
+	\section{Тест гиперссылок}
+	Проверим ссылку на \href{https://www.ctan.org}{CTAN}.
+
+	\section{Тест шрифтов и типов профилей}
+	Проверим активные флаги и шрифты.
+	\textbf{Bold}: активность флага \if@xem@bold TRUE\else FALSE\fi.
+	\textit{Classic profile}: \if@xem@classic TRUE\else FALSE\fi.
+	MS font: \if@xem@ms TRUE\else FALSE\fi.
+
+	\section{Тест графики}
+	Проверка графических профилей: Classic=\if@xemg@classic TRUE\else FALSE\fi, Colorful=\if@xemg@colorful TRUE\else FALSE\fi.
+
+	\section{Заключение}
+	Если диагностика пакета в лог-файле показывает корректные флаги, значит центральный модуль и подключение всех модулей работают правильно.
+
+\end{document}
+
