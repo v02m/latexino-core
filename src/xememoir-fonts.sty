@@ -1,16 +1,94 @@
-%% ==========================================================
-%%  XEMEMOIR-FONTS.STY — модуль шрифтов
-%% ==========================================================
-\ProvidesPackage{xememoir-fonts}[2025/11/01 v1.0 Настройка шрифтов]
+%%% ===========================
+%%% УПРАВЛЕНИЕ ШРИФТАМИ
+%%% ===========================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{xememoir-fonts}[2025/11/01 v3.0 Font setup for xememoir]
 
-%% ===============================
-%%  Настройка основных шрифтов
-%% ===============================
-\setmainfont{Times New Roman} % основной текст
-\setsansfont{Arial}           % без засечек
-\setmonofont{Courier New}     % моноширинный
+%%% ⚙️ Общие настройки шрифтов
+\defaultfontfeatures{Ligatures=TeX} % Включаем стандартные лигатуры TeX.
 
-%% ===============================
-%%  Альтернативные шрифты и fallback
-%% ===============================
-% \newfontfamily\myaltfont{Liberation Serif}
+%%% ---------------------------
+%%% 🔑 Условные флаги для шрифтов
+%%% ---------------------------
+% Их надо определить в центральном модуле xememoir.sty
+% \@xem@cmu, \@xem@ms, \@xem@liberation
+
+%%% ---------------------------
+%%% 1️⃣ Шрифты CMU
+%%% ---------------------------
+\if@xem@cmu
+\IfFontExistsTF{CMU Typewriter Text}{
+  \setmonofont{CMU Typewriter Text}
+  \newfontfamily\cyrillicfonttt{CMU Typewriter Text}
+}{}
+\IfFontExistsTF{CMU Serif}{
+  \setmainfont{CMU Serif}
+  \newfontfamily\cyrillicfont{CMU Serif}
+}{}
+\IfFontExistsTF{CMU Sans Serif}{
+  \setsansfont{CMU Sans Serif}
+  \newfontfamily\cyrillicfontsf{CMU Sans Serif}
+}{}
+\fi
+
+%%% ---------------------------
+%%% 2️⃣ Шрифты Microsoft
+%%% ---------------------------
+\if@xem@ms
+\IfFontExistsTF{Courier New}{
+  \setmonofont{Courier New}
+  \newfontfamily\cyrillicfonttt{Courier New}
+}{}
+\IfFontExistsTF{Times New Roman}{
+  \setmainfont[
+    BoldFont=Times New Roman Bold,
+    ItalicFont=Times New Roman Italic,
+    BoldItalicFont=Times New Roman Bold Italic
+  ]{Times New Roman}
+  \newfontfamily\cyrillicfont{Times New Roman}
+}{}
+\IfFontExistsTF{Arial}{
+  \setsansfont{Arial}
+  \newfontfamily\cyrillicfontsf{Arial}
+}{}
+\fi
+
+%%% ---------------------------
+%%% 3️⃣ Шрифты Liberation
+%%% ---------------------------
+\if@xem@liberation
+\IfFontExistsTF{LiberationMono}{
+  \setmonofont[Scale=0.87]{LiberationMono}
+  \newfontfamily\cyrillicfonttt[Scale=0.87]{LiberationMono}
+}{}
+\IfFontExistsTF{LiberationSerif}{
+  \setmainfont{LiberationSerif}
+  \newfontfamily\cyrillicfont{LiberationSerif}
+}{}
+\IfFontExistsTF{LiberationSans}{
+  \setsansfont{LiberationSans}
+  \newfontfamily\cyrillicfontsf{LiberationSans}
+}{}
+\fi
+
+%%% ---------------------------
+%%% ⚙️ Fallback (CMU), если ни один флаг не активен
+%%% ---------------------------
+\if@xem@cmu\else
+\if@xem@ms\else
+\if@xem@liberation\else
+\IfFontExistsTF{CMU Typewriter Text}{
+  \setmonofont{CMU Typewriter Text}
+  \newfontfamily\cyrillicfonttt{CMU Typewriter Text}
+}{}
+\IfFontExistsTF{CMU Serif}{
+  \setmainfont{CMU Serif}
+  \newfontfamily\cyrillicfont{CMU Serif}
+}{}
+\IfFontExistsTF{CMU Sans Serif}{
+  \setsansfont{CMU Sans Serif}
+  \newfontfamily\cyrillicfontsf{CMU Sans Serif}
+}{}
+\fi\fi\fi
+
+\endinput
