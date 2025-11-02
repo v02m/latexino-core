@@ -63,10 +63,6 @@
 \newif\ifxememoir@usenew
 \xememoir@usenewtrue
 
-%\newif\if@xem@ms
-%\newif\if@xem@liberation
-%\newif\if@xem@cmu
-
 % Флаги выбора семейств шрифтов
 \newif\iffontfamily@ms          % Microsoft (Times New Roman, Arial)
 \newif\iffontfamily@liberation  % Liberation (Linux-совместимые аналоги)
@@ -116,38 +112,6 @@
 \newif\ifliststyle@alpha      % Буквенный стиль (a, b, c...)
 % 🔧 Пример выбора профиля по умолчанию
 \liststyle@gosttrue
-
-
-% ======================================================================
-% 🔗  Алиасы для старых имен (для обратной совместимости)
-% ======================================================================
-%% Bookstyle aliases
-%\let\ifbookstyle@classic=\if@xem@classic
-%\let\ifbookstyle@modern=\if@xem@modern
-%\let\ifbookstyle@academic=\if@xem@academic
-%\let\ifbookstyle@poetry=\if@xem@poetry
-%\let\ifbookstyle@technical=\if@xem@technical
-%\let\ifbookstyle@elegant=\if@xem@elegant
-%\let\ifbookstyle@compact=\if@xem@compact
-%\let\ifbookstyle@bold=\if@xem@bold
-
-%% Liststyle aliases
-%\let\ifliststyle@gost=\if@xeml@gost
-%\let\ifliststyle@numeric=\if@xeml@numeric
-%\let\ifliststyle@mixed=\if@xeml@mixed
-%\let\ifliststyle@alpha=\if@xeml@alpha
-
-% Font selection aliases
-%\let\ifusemsfonts=\if@xem@ms
-%\let\ifuseliberationfonts=\if@xem@liberation
-%\let\ifusecmufonts=\if@xem@cmu
-
-% Graphic style aliases
-%\let\ifgraphicstyle@classic=\if@xemg@classic
-%\let\ifgraphicstyle@colorful=\if@xemg@colorful
-%\let\ifgraphicstyle@minimal=\if@xemg@minimal
-%\let\ifgraphicstyle@technical=\if@xemg@technical
-%\let\ifgraphicstyle@presentation=\if@xemg@presentation
 
 % ======================================================================
 % ⚙️  Значения по умолчанию (можно закомментировать для теста)
