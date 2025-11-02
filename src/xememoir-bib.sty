@@ -1,23 +1,36 @@
-%%% ===========================
-%%% XEMEMOIR BIB MODULE (GOST)
+% ======================================================================
+% 📚 XEMEMOIR-BIB — МОДУЛЬ БИБЛИОГРАФИИ (ГОСТ 7.0.5–2008)
+% ----------------------------------------------------------------------
+% Совместимо с memoir, polyglossia, XeLaTeX и центральным пакетом xememoir
 %%% Refactor Branch
 %%% Author: Valery
 %%% Date: 2025-11-01
 %%% ===========================
+
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{xememoir-bib}[2025/11/01 GOST bibliography for memoir]
 
-% Поддержка языковых кавычек
-\RequirePackage{csquotes}
+% ----------------------------------------------------------------------
+% 🔧 Базовые зависимости
+% ----------------------------------------------------------------------
+\RequirePackage{csquotes} % Поддержка языковых кавычек
 
-% Проверка наличия biblatex-gost через LaTeX
-\IfFileExists{biblatex-gost.sty}{%
-  \typeout{[xememoir-bib] Found biblatex-gost package. Loading...}%
+% ----------------------------------------------------------------------
+% 🧩 Проверка установки biblatex-gost
+% ----------------------------------------------------------------------
+% biblatex-gost не имеет biblatex-gost.sty, а содержит biblatex-gost.def
+\newif\if@xem@hasgost
+\IfFileExists{biblatex-gost.def}{%
+  \@xem@hasgosttrue
+  \typeout{[xememoir-bib] Found biblatex-gost.def — using GOST style.}%
 }{%
-  \PackageWarning{xememoir-bib}{Package 'biblatex-gost' not found. Please install via tlmgr install biblatex-gost}%
+  \@xem@hasgostfalse
+  \PackageWarning{xememoir-bib}{Package 'biblatex-gost' not found. Using fallback style 'numeric'.}%
 }
-
-% Подключение biblatex-gost
+% ----------------------------------------------------------------------
+% ⚙️ Настройка biblatex
+% ----------------------------------------------------------------------
+\if@xem@hasgost
 \RequirePackage[
   backend=biber,
   style=gost-numeric,
@@ -30,16 +43,41 @@
   isbn=false,
   dashed=false,
   maxbibnames=99
-]{biblatex-gost}
+]{biblatex}
+\else
+% fallback если GOST отсутствует
+\RequirePackage[
+  backend=biber,
+  style=numeric,
+  language=auto,
+  bibencoding=utf8,
+  sorting=nyt,
+  doi=true,
+  url=true,
+  maxbibnames=99
+]{biblatex}
+\fi
 
 % Настройка формата библиографии
 \renewcommand*{\bibfont}{\normalfont\small}
 \setlength{\bibitemsep}{0pt}
 \setlength{\bibhang}{1.25cm}
-\setlength{\bibitemindent}{0pt}
+\AtBeginBibliography{%
+  \setlength{\bibitemindent}{0pt}%
+}
 
 \makeatletter
 \def\blx@maxcitenames{99}
 \makeatother
+
+% ----------------------------------------------------------------------
+% 💡 Инструкция
+% ----------------------------------------------------------------------
+% 1. Подключение: \usepackage{xememoir-bib}
+% 2. В документе:
+%      \addbibresource{myrefs.bib}
+%      \cite{key}, \autocite{key}, \parencite{key}
+%      \printbibliography[title={Список литературы}]
+% ----------------------------------------------------------------------
 
 \endinput
