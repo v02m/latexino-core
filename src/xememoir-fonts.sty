@@ -8,20 +8,20 @@
 %%% ⚙️ Общие настройки шрифтов
 \defaultfontfeatures{Ligatures=TeX} % Включаем стандартные лигатуры TeX.
 
-\RequirePackage{amsmath}
-\RequirePackage{amssymb}
-\RequirePackage{amsfonts}
+% \RequirePackage{amsmath}
+% \RequirePackage{amssymb}
+% \RequirePackage{amsfonts}
 
 %%% ---------------------------
 %%% 🔑 Условные флаги для шрифтов
 %%% ---------------------------
 % Их надо определить в центральном модуле xememoir.sty
-% \@xem@cmu, \@xem@ms, \@xem@liberation
+% \iffontfamily@cmu , \iffontfamily@ms, \iffontfamily@liberation
 
 %%% ---------------------------
 %%% 1️⃣ Шрифты CMU
 %%% ---------------------------
-\if@xem@cmu
+\iffontfamily@cmu
 \IfFontExistsTF{CMU Typewriter Text}{
   \setmonofont{CMU Typewriter Text}
   \newfontfamily\cyrillicfonttt{CMU Typewriter Text}
@@ -39,7 +39,7 @@
 %%% ---------------------------
 %%% 2️⃣ Шрифты Microsoft
 %%% ---------------------------
-\if@xem@ms
+\iffontfamily@ms
 \IfFontExistsTF{Courier New}{
   \setmonofont{Courier New}
   \newfontfamily\cyrillicfonttt{Courier New}
@@ -61,7 +61,7 @@
 %%% ---------------------------
 %%% 3️⃣ Шрифты Liberation
 %%% ---------------------------
-\if@xem@liberation
+\iffontfamily@liberation
 \IfFontExistsTF{LiberationMono}{
   \setmonofont[Scale=0.87]{LiberationMono}
   \newfontfamily\cyrillicfonttt[Scale=0.87]{LiberationMono}
@@ -79,9 +79,12 @@
 %%% ---------------------------
 %%% ⚙️ Fallback (CMU), если ни один флаг не активен
 %%% ---------------------------
-\if@xem@cmu\else
-\if@xem@ms\else
-\if@xem@liberation\else
+%\if@xem@cmu\else
+%\if@xem@ms\else
+%\if@xem@liberation\else
+\iffontfamily@cmu\else
+\iffontfamily@ms\else
+\iffontfamily@liberation\else
 \IfFontExistsTF{CMU Typewriter Text}{
   \setmonofont{CMU Typewriter Text}
   \newfontfamily\cyrillicfonttt{CMU Typewriter Text}

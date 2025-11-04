@@ -48,10 +48,11 @@
 	% ======================================================================
 	\chapter{Тест шрифтов}
 	Активные шрифты:
-	MS: \if@xem@ms TRUE\else FALSE\fi,
-	Liberation: \if@xem@liberation TRUE\else FALSE\fi,
-	CMU: \if@xem@cmu TRUE\else FALSE\fi.
-
+	\makeatletter
+	MS: \iffontfamily@ms TRUE\else FALSE\fi,
+	Liberation: \iffontfamily@liberation TRUE\else FALSE\fi,
+	CMU: \iffontfamily@cmu  TRUE\else FALSE\fi.
+	\makeatother
 	\textbf{Bold text} и \textit{italic text} для проверки стилей.
 
 	% ======================================================================
@@ -59,7 +60,7 @@
 	% ======================================================================
 	\chapter{Тест полей и колонтитулов}
 	Здесь мы проверяем корректность установки полей, колонтитулов и заголовков.
-	\lipsum[1-2] % Если нужен пример текста для проверки макета
+	%\lipsum[1-2] % Если нужен пример текста для проверки макета
 
 	% ======================================================================
 	% Проверка списков
@@ -83,16 +84,16 @@
 	% Проверка графики
 	% ======================================================================
 	\chapter{Тест графических профилей}
-	Classic: \if@xemg@classic TRUE\else FALSE\fi,
-	Colorful: \if@xemg@colorful TRUE\else FALSE\fi,
-	Presentation: \if@xemg@presentation TRUE\else FALSE\fi.
-
-	% Пример вставки графики
-	\IfFileExists{example-image-a.pdf}{%
-		\includegraphics[width=0.5\textwidth]{example-image-a.pdf}%
-	}{%
-		\typeout{No example image found. Skipping.}%
-	}
+%	Classic: \ifgraphicstyle@classic  TRUE\else FALSE\fi,
+%	Colorful: \ifgraphicstyle@colorful   TRUE\else FALSE\fi,
+%	Presentation: \ifgraphicstyle@presentation TRUE\else FALSE\fi.
+%
+%	% Пример вставки графики
+%	\IfFileExists{example-image-a.pdf}{%
+%		\includegraphics[width=0.5\textwidth]{example-image-a.pdf}%
+%	}{%
+%		\typeout{No example image found. Skipping.}%
+%	}
 
 	% ======================================================================
 	% Проверка модулей math, tables, bib, todo, listings, pdf
@@ -116,17 +117,17 @@
 
 	\section{Bibliography}
 	% Простейший тест
-	\cite{dummyref} % Если bibsetup подключён корректно
+%	\cite{dummyref} % Если bibsetup подключён корректно
 
 	\section{TODO notes}
 	% Проверка todo-заметок
-	\todo{Это тестовая заметка TODO.}
-
-	\section{Listings / code}
-	\begin{lstlisting}[language=Python]
-		def test():
-		return "Hello, xememoir!"
-	\end{lstlisting}
+%	\todo{Это тестовая заметка TODO.}
+%
+%	\section{Listings / code}
+%	\begin{lstlisting}[language=Python]
+%		def test():
+%		return "Hello, xememoir!"
+%	\end{lstlisting}
 
 	\section{PDF / гиперссылки}
 	Проверка гиперссылки: \href{https://www.ctan.org}{CTAN}
